@@ -1,5 +1,7 @@
 # Fake Shop
 
+## deployment.yaml
+O arquivo deployment.yaml está dentro do diretório k8s
 
 ## Variável de Ambiente
 DB_HOST	=> Host do banco de dados PostgreSQL.
