@@ -1,0 +1,19 @@
+name: CI-CD                # Nome do Workflow
+on:                        # Evento que dispara o WF
+  push:                    # Specs do push
+    branches: ["main"]     # Quais branches disparam
+  workflow_dispatch:
+
+jobs:                      # Tarefas do Workflow
+  CI:                      # Job da pipeline de CI
+    runs-on: ubuntu-latest # Spec do runner do job
+    steps:                 # Ordem de ações executadas
+      - run: echo "Obter código  # Roda no ambiente
+      - run: echo "Executar o Docker Build"
+      - run: echo "Enviar a imagem Docker para o Docker Hub"
+  CD:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Obter código # Tarefa/Etapa/Action
+      - run: echo "Configurar o kubeconfig"
+      - run: echo "Executar o apply"
