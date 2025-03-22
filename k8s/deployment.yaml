@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:             # Especificação do Deployment
+  selector:       # Seletor de labels
+    matchLabels:  # atribui uma label
+      app: postgres
+  template:       # Contém info do pod: containeres
+    metadata:
+      labels:
+        app: postgres
+    spec:         # Especificação do pod
+      containers: # Cada um possui nome, img,
+        - name: postgres
+          image: postgres:13.16
+          ports: # define a configuração das portas
+            - containerPort: 5432 # padrão do postgres
+          env:    # variáveis de ambiente do postgres
+            - name: POSTGRES_USER
+              value: ecommerce
+            - name: POSTGRES_PASSWORD
+              value: Pg1234
+            - name: POSTGRES_DB
+              value: ecommerce
+---
+apiVersion: v1         # definimos os pods e portas
+kind: Service         # que vão ser expostas e o tipo
+metadata:             # de service no spec.
+  name: postgres
+spec:                   
+  type: ClusterIP     # ClusterIP para expor o pod
+  ports:              # apenas internamente.
+    - port: 5432
+  selector:           # usamos a label para indicar o
+    app: postgres     # pod.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fakeshop
+spec:             # Especificação do Deployment
+  replicas: 3     # Número de cópias do pod
+  selector:       
+    matchLabels:
+      app: fakeshop
+  template:       # Configurção do pod
+    metadata:
+      labels:
+        app: fakeshop
+    spec:         # Especificação do pod
+      containers: # Configuração dos Containeres
+        - name: fakeshop
+          image: fmossri/desafio-fake-shop:v2
+          ports: # Configuração das portas do container
+            - containerPort: 5000 # padrão do nginx
+          env:    # variáveis de ambiente do app
+            - name: DB_HOST
+              value: postgres
+            - name: DB_USER
+              value: ecommerce
+            - name: DB_PASSWORD
+              value: Pg1234
+            - name: DB_NAME
+              value: ecommerce
+            - name: FLASK_APP
+              value: index.py
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fakeshop
+spec:                   
+  type: LoadBalancer  # Load Balancer para expor o pod 
+  ports:              
+    - port: 80        # Porta que expõe a aplicação
+      targetPort: 5000 # Porta real da aplicaçãp
+      nodePort: 30000
+  selector:           
+    app: fakeshop     # Label da aplicação
