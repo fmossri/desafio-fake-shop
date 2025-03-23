@@ -51,7 +51,7 @@ spec:             # Especificação do Deployment
     spec:         # Especificação do pod
       containers: # Configuração dos Containeres
         - name: fakeshop
-          image: fmossri/desafio-fake-shop:v2
+          image: fmossri/desafio-fake-shop:latest
           ports: # Configuração das portas do container
             - containerPort: 5000 # padrão do nginx
           env:    # variáveis de ambiente do app
